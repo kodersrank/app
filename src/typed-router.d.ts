@@ -19,5 +19,6 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
+    '/secret/[hash]': RouteRecordInfo<'/secret/[hash]', '/secret/:hash', { hash: ParamValue<true> }, { hash: ParamValue<false> }>,
   }
 }
