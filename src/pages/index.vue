@@ -1,5 +1,5 @@
 <template>
-  <h1>Hello world!</h1>
+  <SecretForm />
 </template>
 
 <script lang="ts" setup>
