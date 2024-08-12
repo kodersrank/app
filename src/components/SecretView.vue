@@ -8,7 +8,14 @@
         <p>Expires At: {{ secret.expiresAt }}</p>
       </v-card-text>
     </v-card>
-    <v-alert v-else-if="errorMessage" type="error">{{ errorMessage }}</v-alert>
+    <v-alert v-else-if="errorMessage" type="error">
+      {{ errorMessage }}
+      <router-link to="/secret">
+        <v-btn class="float-right">
+          Create a new secret
+        </v-btn>
+      </router-link>
+    </v-alert>
   </v-container>
 </template>
 
