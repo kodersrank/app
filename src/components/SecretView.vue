@@ -74,7 +74,7 @@
   const msLeft = ref<number|null>(0);
 
   const remainingTime = computed<string|null>(() => {
-    if (msLeft.value !== null) {
+    if (secret.value && msLeft.value !== null) {
       if (!msLeft.value) return "Uh-oh! Time's up. If you refresh this page, the secret will be gone.";
 
       const days = Math.floor(msLeft.value / (1000 * 60 * 60 * 24));
