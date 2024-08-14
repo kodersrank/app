@@ -12,6 +12,7 @@
             hide-details="auto"
             label="I have a secret"
             placeholder="Enter your hash"
+            @keyup.enter="$router.push(`/secret/${hashInput}`)"
           />
           <router-link
             v-if="hashInput"
