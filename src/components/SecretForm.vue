@@ -27,9 +27,9 @@
         type="submit"
       > Submit </v-btn>
       <v-alert v-if="secretHash" type="success">
-        Secret created! Hash: {{ secretHash }}
+        Secret created! Save this code (hash) and only share with whoever needs to see it: {{ secretHash }}
         <br>
-        You can view it <router-link :to="`/secret/${secretHash}`">here</router-link>.
+        You can view your secret message <router-link :to="`/secret/${secretHash}`">here</router-link>.
       </v-alert>
     </v-form>
   </v-container>
@@ -64,3 +64,36 @@
     }
   };
 </script>
+
+<style scoped lang="scss">
+.v-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.v-form {
+  width: 100%;
+  max-width: 600px;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.v-alert {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background-color: #4caf50;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-size: 0.875rem;
+}
+</style>
