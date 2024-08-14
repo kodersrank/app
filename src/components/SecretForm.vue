@@ -2,6 +2,7 @@
   <v-container>
     <go-back-btn />
     <v-form
+      ref="form"
       v-model="formIsValid"
       @submit.prevent="submitForm"
     >
@@ -35,8 +36,8 @@
       />
       <v-btn
         color="secondary"
-        @click="clearForm"
-      > Clear </v-btn>
+        @click="resetForm"
+      > Reset </v-btn>
       <v-btn
         class="float-right"
         color="primary"
@@ -59,7 +60,9 @@
 <script setup lang="ts">
   import { ref } from 'vue';
   import apiService from '@/services/api-service';
+  import { VForm } from 'vuetify/components';
 
+  const form = ref<VForm|null>(null);
   const formIsValid = ref<boolean>(false);
   const secret = ref<string>('');
   const expireAfterViews = ref<number>(3);
@@ -74,12 +77,13 @@
     naturalNumber: (v: number) => v >= 0 || 'Must not be negative',
   };
 
-  const clearForm = () => {
+  const resetForm = () => {
     secret.value = '';
-    expireAfterViews.value = 3;
-    expireAfter.value = 5;
     formIsValid.value = false;
     errorMessage.value = '';
+    form.value?.reset();
+    expireAfterViews.value = 3;
+    expireAfter.value = 5;
   };
 
   const submitForm = async () => {
@@ -91,7 +95,7 @@
         expireAfter: +expireAfter.value,
       });
       secretHash.value = response.data.hash;
-      clearForm();
+      resetForm();
     } catch (error) {
       console.error('Error submitting form:', error);
       errorMessage.value = 'Failed to create secret. Please try again.';
