@@ -18,7 +18,7 @@
       <v-text-field
         v-model="expireAfter"
         label="Expire After (minutes)"
-        :rules="[rules.required, rules.positiveNumber]"
+        :rules="[rules.required, rules.naturalNumber]"
         type="number"
       />
       <v-btn
@@ -48,6 +48,7 @@
   const rules = {
     required: (v: string) => !!v || 'This field is required',
     positiveNumber: (v: number) => v > 0 || 'Must be greater than 0',
+    naturalNumber: (v: number) => v >= 0 || 'Must not be negative',
   };
 
   const submitForm = async () => {
