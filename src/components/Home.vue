@@ -55,6 +55,8 @@
     height: 100%;
     min-width: 400px;
     padding: 10px;
+    background-color: #fff8;
+    backdrop-filter: blur(6px);
 
     --boost: 0%;
 
@@ -98,7 +100,7 @@ header {
 
     .glow {
       font-weight: 900;
-      animation: pulse 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      animation: pulse 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
   }
 }
@@ -106,7 +108,7 @@ header {
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
-    text-shadow: 0px 0px 7px white;
+    text-shadow: 0px 0px 8px white;
   }
   50% {
     opacity: .95;
