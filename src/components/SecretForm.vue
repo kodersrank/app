@@ -39,15 +39,19 @@
       <v-btn
         class="float-right"
         color="primary"
-        :disabled="!formIsValid"
+        :disabled="!formIsValid || loading"
         type="submit"
       > Submit </v-btn>
-      <v-alert v-if="secretHash" type="success">
-        Secret created! Save this code (hash) and only share with whoever needs to see it: {{ secretHash }}
-        <br>
-        You can view your secret message <router-link :to="`/secret/${secretHash}`">here</router-link>.
-      </v-alert>
+      <v-progress-linear v-if="loading" indeterminate />
     </v-form>
+    <v-alert v-if="secretHash" type="success">
+      Secret created! Save this code (hash) and only share with whoever needs to see it: {{ secretHash }}
+      <br>
+      You can view your secret message <router-link :to="`/secret/${secretHash}`">here</router-link>.
+    </v-alert>
+    <v-alert v-if="errorMessage" type="error">
+      {{ errorMessage }}
+    </v-alert>
   </v-container>
 </template>
 
@@ -60,6 +64,8 @@
   const expireAfterViews = ref<number>(3);
   const expireAfter = ref<number>(5);
   const secretHash = ref<string>('');
+  const errorMessage = ref<string>('');
+  const loading = ref<boolean>(false);
 
   const rules = {
     required: (v: string) => !!v || 'This field is required',
@@ -71,11 +77,12 @@
     secret.value = '';
     expireAfterViews.value = 3;
     expireAfter.value = 5;
-    secretHash.value = '';
     formIsValid.value = false;
+    errorMessage.value = '';
   };
 
   const submitForm = async () => {
+    loading.value = true;
     try {
       const response = await apiService.post('/api/secret', {
         secret: secret.value,
@@ -86,6 +93,9 @@
       clearForm();
     } catch (error) {
       console.error('Error submitting form:', error);
+      errorMessage.value = 'Failed to create secret. Please try again.';
+    } finally {
+      loading.value = false;
     }
   };
 </script>
@@ -128,8 +138,6 @@ $spacing: 1rem;
   margin: 0 auto;
   padding: 0.75rem 1rem;
   border-radius: 8px;
-  background-color: #4caf50;
-  color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   font-size: 0.875rem;
 }
