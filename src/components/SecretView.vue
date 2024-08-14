@@ -1,6 +1,23 @@
 <template>
   <v-container>
-    <v-card v-if="secret" class="secret-card">
+    <v-skeleton-loader
+      v-if="loading"
+      class="skeleton-loader"
+      :loading="loading"
+    >
+      <template #default>
+        <v-card class="secret-card">
+          <v-card-title>Secret</v-card-title>
+          <v-card-subtitle>Loading...</v-card-subtitle>
+          <v-card-text>
+            <p>Remaining Views: Loading...</p>
+            <p>Expires At: Loading...</p>
+          </v-card-text>
+        </v-card>
+      </template>
+    </v-skeleton-loader>
+
+    <v-card v-else-if="secret" class="secret-card">
       <v-card-title>Secret</v-card-title>
       <v-card-subtitle>{{ secret.secretText }}</v-card-subtitle>
       <v-card-text>
@@ -10,6 +27,7 @@
         </p>
       </v-card-text>
     </v-card>
+
     <v-alert v-else-if="errorMessage" class="error-alert" type="error">
       {{ errorMessage }}
       <router-link to="/secret">
@@ -22,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-  import { onMounted, ref } from 'vue';
+  import { computed, onMounted, ref } from 'vue';
   import { isAxiosError } from 'axios';
   import { ExtendedSecret } from '@/types/extended-secret.interface';
   import apiService from '@/services/api-service';
@@ -34,7 +52,8 @@
   const props = defineProps<Props>();
 
   const secret = ref<ExtendedSecret|null>(null);
-  const errorMessage = ref('');
+  const errorMessage = ref<string>('');
+  const loading = ref<boolean>(true);
 
   const fetchSecret = async (hash: string) => {
     try {
@@ -50,6 +69,8 @@
           errorMessage.value = 'Error fetching secret.';
         }
       }
+    } finally {
+      loading.value = false;
     }
   };
 
@@ -84,6 +105,7 @@ $font-size-small: 0.875rem;
   padding: $spacing-medium;
   border-radius: $border-radius;
   box-shadow: $box-shadow;
+  margin-bottom: $spacing-medium;
 }
 
 .error-alert {
@@ -101,11 +123,12 @@ $font-size-small: 0.875rem;
   font-size: $font-size-small;
 }
 
-.secret-card {
-  margin-bottom: $spacing-medium;
-}
-
 .v-card-title, .v-card-subtitle, .v-card-text {
   margin-bottom: $spacing-small;
+}
+
+.skeleton-loader {
+  width: 100%;
+  max-width: 600px;
 }
 </style>
