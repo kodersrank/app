@@ -21,6 +21,8 @@
   width: 100vw;
   object-fit: cover;
   filter: blur(1px) brightness(50%);
+  mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 90%);
+  -webkit-mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 90%);
   z-index: 0;
 }
 </style>
