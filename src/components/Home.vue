@@ -4,7 +4,7 @@
       <h1 class="cta-heading mb-6">Unveil the <span class="glow">Enigma</span></h1>
     </header>
     <v-container class="h-75 d-flex align-center justify-center">
-      <div class="fill-height content d-flex justify-center">
+      <div class="fill-height content d-flex flex-column flex-md-row justify-center">
         <section>
           <v-text-field
             v-model="hashInput"
@@ -23,7 +23,7 @@
           </router-link>
         </section>
         <div class="pa-6 d-flex flex-column justify-center">
-          <strong class="text-uppercase"> or </strong>
+          <strong class="text-uppercase text-center"> or </strong>
         </div>
         <section>
           <router-link class="d-flex justify-start" to="/secret">
