@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <go-back-btn />
     <v-form
       v-model="formIsValid"
       @submit.prevent="submitForm"

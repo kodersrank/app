@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <go-back-btn />
     <v-skeleton-loader
       v-if="loading"
       class="skeleton-loader"
