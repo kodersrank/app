@@ -25,7 +25,8 @@
       />
       <v-text-field
         v-model="expireAfter"
-        hint="Enter the duration (in minutes) for which the secret will be visible before it expires."
+        :hint="'Enter the duration (in minutes) for which the secret will be visible before it expires. '
+          + 'Entering 0 will make it available indefinitely.'"
         label="Expire After (minutes)"
         persistent-hint
         :rules="[rules.required, rules.naturalNumber]"
