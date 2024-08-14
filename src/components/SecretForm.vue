@@ -117,6 +117,8 @@ $spacing: 1rem;
   padding: $spacing;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #0008;
+  backdrop-filter: blur(10px);
 
   .v-textarea,
   .v-text-field,
