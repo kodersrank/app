@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <go-back-btn />
     <v-card
       v-if="secret"
       class="secret-card"
