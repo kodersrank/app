@@ -4,20 +4,30 @@
       v-model="formIsValid"
       @submit.prevent="submitForm"
     >
+      <div class="instructions">
+        <p>Fill out the form below to create a new secret. Be sure to specify how long the secret should be visible and how many times it can be viewed before expiring.</p>
+      </div>
+
       <v-textarea
         v-model="secret"
+        hint="Enter the secret message you want to hide."
         label="Secret"
+        persistent-hint
         :rules="[rules.required]"
       />
       <v-text-field
         v-model="expireAfterViews"
+        hint="Specify how many times the secret can be viewed before it expires."
         label="Expire After Views"
+        persistent-hint
         :rules="[rules.required, rules.positiveNumber]"
         type="number"
       />
       <v-text-field
         v-model="expireAfter"
+        hint="Enter the duration (in minutes) for which the secret will be visible before it expires."
         label="Expire After (minutes)"
+        persistent-hint
         :rules="[rules.required, rules.naturalNumber]"
         type="number"
       />
@@ -66,6 +76,8 @@
 </script>
 
 <style scoped lang="scss">
+$spacing: 1rem;
+
 .v-container {
   display: flex;
   justify-content: center;
@@ -76,14 +88,24 @@
 .v-form {
   width: 100%;
   max-width: 600px;
-  padding: 1rem;
+  padding: $spacing;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  .v-textarea,
+  .v-text-field,
+  .v-btn {
+    margin-bottom: $spacing;
+  }
+
+  .v-btn {
+    margin-top: $spacing;
+  }
 }
 
 .v-alert {
   position: fixed;
-  bottom: 1rem;
+  bottom: $spacing;
   left: 50%;
   transform: translateX(-50%);
   width: 90%;
