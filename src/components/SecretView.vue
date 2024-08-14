@@ -1,6 +1,13 @@
 <template>
   <v-container>
-    <v-card v-if="secret" class="secret-card" :class="{ 'pulsating-outline': showExpiryDate }">
+    <v-card
+      v-if="secret"
+      class="secret-card"
+      :class="{
+        'pulsating-outline': showExpiryDate && msLeft,
+        'expired-outline': showExpiryDate && !msLeft,
+      }"
+    >
       <v-card-title>Secret</v-card-title>
       <v-card-subtitle>{{ secret.secretText }}</v-card-subtitle>
       <v-card-text>
@@ -122,6 +129,10 @@ $font-size-small: 0.875rem;
   &.pulsating-outline {
     outline: 2px solid rgba(var(--v-theme-primary), 0.5);
     animation: pulse 1s infinite;
+  }
+
+  &.expired-outline {
+    outline: 2px solid rgb(var(--v-theme-error));
   }
 }
 
