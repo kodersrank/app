@@ -5,7 +5,9 @@
       <v-card-subtitle>{{ secret.secretText }}</v-card-subtitle>
       <v-card-text>
         <p>Remaining Views: {{ secret.remainingViews }}</p>
-        <p>Expires At: {{ secret.expiresAt }}</p>
+        <p v-if="showExpiryDate">
+          Expires At: {{ expiryDate }}
+        </p>
       </v-card-text>
     </v-card>
     <v-alert v-else-if="errorMessage" type="error">
@@ -50,6 +52,10 @@
       }
     }
   };
+
+  const showExpiryDate = computed<boolean>(() => !!secret.value?.expiresAt);
+
+  const expiryDate = computed<string>(() => new Date(secret.value?.expiresAt as string).toLocaleString());
 
   onMounted(() => {
     fetchSecret(props.hash);
