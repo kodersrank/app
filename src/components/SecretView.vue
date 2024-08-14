@@ -1,24 +1,6 @@
 <template>
   <v-container>
-    <go-back-btn />
-    <v-skeleton-loader
-      v-if="loading"
-      class="skeleton-loader"
-      :loading="loading"
-    >
-      <template #default>
-        <v-card class="secret-card">
-          <v-card-title>Secret</v-card-title>
-          <v-card-subtitle>Loading...</v-card-subtitle>
-          <v-card-text>
-            <p>Remaining Views: Loading...</p>
-            <p>Expires At: Loading...</p>
-          </v-card-text>
-        </v-card>
-      </template>
-    </v-skeleton-loader>
-
-    <v-card v-else-if="secret" class="secret-card">
+    <v-card v-if="secret" class="secret-card" :class="{ 'pulsating-outline': showExpiryDate }">
       <v-card-title>Secret</v-card-title>
       <v-card-subtitle>{{ secret.secretText }}</v-card-subtitle>
       <v-card-text>
@@ -26,9 +8,14 @@
         <p v-if="showExpiryDate">
           Expires At: {{ expiryDate }}
         </p>
+        <p
+          v-if="showExpiryDate && remainingTime"
+          class="pa-6 text-center text-overline"
+        >
+          {{ remainingTime }}
+        </p>
       </v-card-text>
     </v-card>
-
     <v-alert v-else-if="errorMessage" class="error-alert" type="error">
       {{ errorMessage }}
       <router-link to="/secret">
@@ -53,8 +40,7 @@
   const props = defineProps<Props>();
 
   const secret = ref<ExtendedSecret|null>(null);
-  const errorMessage = ref<string>('');
-  const loading = ref<boolean>(true);
+  const errorMessage = ref('');
 
   const fetchSecret = async (hash: string) => {
     try {
@@ -70,8 +56,6 @@
           errorMessage.value = 'Error fetching secret.';
         }
       }
-    } finally {
-      loading.value = false;
     }
   };
 
@@ -79,13 +63,39 @@
 
   const expiryDate = computed<string>(() => new Date(secret.value?.expiresAt as string).toLocaleString());
 
-  onMounted(() => {
-    fetchSecret(props.hash);
+  const msLeft = ref<number|null>(0);
+
+  const remainingTime = computed<string|null>(() => {
+    if (msLeft.value !== null) {
+      if (!msLeft.value) return "Uh-oh! Time's up. If you refresh this page, the secret will be gone.";
+
+      const days = Math.floor(msLeft.value / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((msLeft.value % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((msLeft.value % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((msLeft.value % (1000 * 60)) / 1000);
+      return `${days} days ${hours} hours ${minutes} minutes ${seconds} seconds`;
+    } else return null;
+  });
+
+  onMounted(async () => {
+    await fetchSecret(props.hash);
+
+    if (showExpiryDate.value && secret.value) {
+      const interval = setInterval(() => {
+        const expiry = new Date(secret.value?.expiresAt as string);
+        const diff = +expiry - Date.now();
+        if (diff > 0) {
+          msLeft.value = diff;
+        } else {
+          msLeft.value = 0;
+          clearInterval(interval);
+        }
+      }, 1000);
+    }
   });
 </script>
 
 <style scoped lang="scss">
-// TODO: move to variables.scss
 $spacing-small: 0.5rem;
 $spacing-medium: 1rem;
 $border-radius: 8px;
@@ -106,7 +116,13 @@ $font-size-small: 0.875rem;
   padding: $spacing-medium;
   border-radius: $border-radius;
   box-shadow: $box-shadow;
-  margin-bottom: $spacing-medium;
+  position: relative;
+  overflow: hidden;
+
+  &.pulsating-outline {
+    outline: 2px solid rgba(var(--v-theme-primary), 0.5);
+    animation: pulse 1s infinite;
+  }
 }
 
 .error-alert {
@@ -128,8 +144,15 @@ $font-size-small: 0.875rem;
   margin-bottom: $spacing-small;
 }
 
-.skeleton-loader {
-  width: 100%;
-  max-width: 600px;
+@keyframes pulse {
+  0% {
+    outline-color: rgba(var(--v-theme-primary), 0.3);
+  }
+  50% {
+    outline-color: rgba(var(--v-theme-primary), 0.6);
+  }
+  100% {
+    outline-color: rgba(var(--v-theme-primary), 0.3);
+  }
 }
 </style>
