@@ -71,7 +71,6 @@
     secret.value = '';
     expireAfterViews.value = 3;
     expireAfter.value = 5;
-    secretHash.value = '';
     formIsValid.value = false;
   };
 
