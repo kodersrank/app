@@ -32,6 +32,11 @@
         type="number"
       />
       <v-btn
+        color="secondary"
+        @click="clearForm"
+      > Clear </v-btn>
+      <v-btn
+        class="float-right"
         color="primary"
         :disabled="!formIsValid"
         type="submit"
@@ -61,6 +66,14 @@
     naturalNumber: (v: number) => v >= 0 || 'Must not be negative',
   };
 
+  const clearForm = () => {
+    secret.value = '';
+    expireAfterViews.value = 3;
+    expireAfter.value = 5;
+    secretHash.value = '';
+    formIsValid.value = false;
+  };
+
   const submitForm = async () => {
     try {
       const response = await apiService.post('/api/secret', {
@@ -69,6 +82,7 @@
         expireAfter: +expireAfter.value,
       });
       secretHash.value = response.data.hash;
+      clearForm();
     } catch (error) {
       console.error('Error submitting form:', error);
     }
